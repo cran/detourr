@@ -23,7 +23,7 @@ merge_defaults_list <- function(l, default_l) {
 #' Aesthetic mapping for tours describing how variables in the data are
 #' mapped to visual properties of the tour animation.
 #' @param ... list of name-value pairs in the form 'aesthetic = variable'.
-#' Variables are evaluated using {tidyselect} syntax.
+#' Variables are evaluated using tidyselect syntax.
 #' @return a list of quosures
 #' @examples
 #' detour(tourr::flea, tour_aes(projection = -species, colour = species)) |>
@@ -123,10 +123,13 @@ check_dots <- function(dots, supported_arg_names) {
   }
 }
 
-make_widget <- function(x, widget, width, height, dependencies) {
+make_widget <- function(x, widget_type, width, height, dependencies) {
+  x <- as.list(x)
+  x$widgetType <- widget_type
+
   htmlwidgets::createWidget(
-    widget,
-    as.list(x),
+    "detourr",
+    x,
     sizingPolicy = htmlwidgets::sizingPolicy(
       viewer.padding = 0,
       viewer.paneHeight = 500,

@@ -2,19 +2,52 @@
 % Please edit documentation in R/shiny_bindings.r
 \name{detour-shiny}
 \alias{detour-shiny}
-\alias{displayScatter3dOutput}
-\alias{displayScatter2dOutput}
-\alias{shinyRenderDisplayScatter2d}
-\alias{shinyRenderDisplayScatter3d}
+\alias{detourOutput}
+\alias{shinyRenderDetour}
+\alias{detour_proxy}
+\alias{add_points}
+\alias{add_edges}
+\alias{highlight_points}
+\alias{enlarge_points}
+\alias{clear_points}
+\alias{clear_edges}
+\alias{clear_highlight}
+\alias{clear_enlarge}
+\alias{force_rerender}
 \title{Shiny bindings for detourr}
 \usage{
-displayScatter3dOutput(output_id, width = "100\%", height = "400px")
+detourOutput(output_id, width = "100\%", height = "400px")
 
-displayScatter2dOutput(output_id, width = "100\%", height = "400px")
+shinyRenderDetour(expr, env = parent.frame(), quoted = FALSE)
 
-shinyRenderDisplayScatter2d(expr, env = parent.frame(), quoted = FALSE)
+detour_proxy(id, session = shiny::getDefaultReactiveDomain())
 
-shinyRenderDisplayScatter3d(expr, env = parent.frame(), quoted = FALSE)
+add_points(
+  proxy,
+  points,
+  .data = NULL,
+  .col_means = NULL,
+  .scale_factor = NULL,
+  colour = "black",
+  size = 1,
+  alpha = 1
+)
+
+add_edges(proxy, edge_list)
+
+highlight_points(proxy, point_list, alpha = 0.3)
+
+enlarge_points(proxy, point_list, size = 2)
+
+clear_points(proxy)
+
+clear_edges(proxy)
+
+clear_highlight(proxy)
+
+clear_enlarge(proxy)
+
+force_rerender(proxy)
 }
 \arguments{
 \item{output_id}{output variable to read from}
@@ -23,19 +56,66 @@ shinyRenderDisplayScatter3d(expr, env = parent.frame(), quoted = FALSE)
 \code{"400px"}, \code{"auto"}) or a number, which will be coerced to a
 string and have \code{"px"} appended.}
 
-\item{expr}{an expression that generates a {detourr} widget}
+\item{expr}{an expression that generates a detourr widget}
 
 \item{env}{The environment in which to evaluate \code{expr}.}
 
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
+
+\item{id}{output id of the detour instance}
+
+\item{session}{the Shiny session object used in the app.
+Default should work for most cases}
+
+\item{proxy}{proxy object created by \code{\link{detour_proxy}}}
+
+\item{points}{Data.frame of points}
+
+\item{.data}{Original dataset used in creating the detourr instance}
+
+\item{.col_means}{Vector of column means of the original dataset.
+Defaults to the result of \code{attributes(scale(.data))[["scaled:center"]]}}
+
+\item{.scale_factor}{Numeric value to multiply the centered data.
+Defaults to \code{1 / max(sqrt(rowSums(scale(.data)^2)))}}
+
+\item{colour}{Vector or single value containing hex values of colors (or web colors)}
+
+\item{size}{the size of the points to be enlarged}
+
+\item{alpha}{The transparency value of the points outside of the point_list}
+
+\item{edge_list}{Data.frame with two columns with the \code{from} node at first.
+The indexing of points starts with the original dataset.
+If \code{\link{add_points}} has been called before hand,
+the indexing of these points starts from the end of the original dataset.}
+
+\item{point_list}{Numeric vector. indexes to enlarge in the prinary dataset}
 }
 \value{
 An output or render function that enables the use of the widget
 within shiny applications
+
+Proxy object to be used for piping
+
+Proxy object to be used for piping
 }
 \description{
 Output and render functions for using detourr with shiny. The output
 function used must match both the display method and tour dim used,
 or it will lead to strange behavour.
+
+Creates a proxy object that can be used to add
+or remove points to a detour instance that has
+already being rendered using \code{\link{shinyRenderDetour}}.
+To be used in Shiny apps only.
+
+The given points will have the original opacity while the other points
+will have reduced opacity
+
+The given points will have a larger size while the rest
+remains the same
+
+Useful when detourr will not update unless put on focus
 }

@@ -23,6 +23,8 @@ show_scatter_internal(
 \item size: point size, defaults to 1
 \item alpha: point opacity, defaults to 1
 \item background_colour: defaults to "white"
+\item edge_colour: colour of edges, defaults to black
+\item edge_width: width of edges, defaults to 1
 }}
 
 \item{palette}{Colour palette to use with the colour aesthetic. Can be:
@@ -62,7 +64,7 @@ Internal method for 2D and 3D Scatter Plot Display
 \details{
 This display method produces an interactive scatterplot animation which
 supports both 2D and 3D tours. Linked selection and filtering is also
-supported using {crosstalk}. The set of interactive controls available are:
+supported using crosstalk. The set of interactive controls available are:
 \itemize{
 \item A timeline with a play / pause button and indicators at the position of
 each basis used. The basis indicators can be hovered with the mouse to show
